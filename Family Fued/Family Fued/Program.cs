@@ -35,26 +35,163 @@ namespace Family_Fued
 {
     class Program
     {
+        //vvv Methods that relate to the game vvv
+
         static void Menu()
         {
+            Console.Clear();
 
+            ConsoleKeyInfo keyPressed;
+            bool menuLoop = true;
+            int arrowPos = 0;
+            string[] menuOptions = { "Play", "Settings", "Quit" };
+
+            while (menuLoop == true)
+            {
+                Console.WriteLine("Welcome to family fued!");
+
+                for (int i = 0; i < menuOptions.Length; i++) //Write each menu option with the arrow pointer
+                {
+                    if (i == arrowPos)
+                    {
+                        Console.Write("> ");
+                    }
+                    else
+                    {
+                        Console.Write("  ");
+                    }
+                    Console.WriteLine(menuOptions[i]);
+                }
+
+                keyPressed = Console.ReadKey(); //Getting up or down arrow inputs to move the arrow pointer
+                Console.Clear();
+                if (keyPressed.Key == ConsoleKey.UpArrow)
+                {
+                    arrowPos--;
+                }
+                else if (keyPressed.Key == ConsoleKey.DownArrow)
+                {
+                    arrowPos++;
+                }
+                else if (keyPressed.Key == ConsoleKey.Enter)
+                {
+                    menuLoop = false;
+                }
+                arrowPos = Bouce(arrowPos, 0, menuOptions.Length - 1);
+            }
+
+            if (arrowPos == 0)
+            {
+                Game();
+            }
+            else if (arrowPos == 1)
+            {
+                Settings();
+            }
         }
 
         static void Settings()
         {
+            Console.Clear();
 
+            ConsoleKeyInfo keyPressed;
+            int arrowPos = 0;
+            bool settingsLoop = true;
+            string[] settingsOptions = { "Preferences", "List Contestants", "Player Stats", "Back" };
+
+            while (settingsLoop == true)
+            {
+                for (int i = 0; i < settingsOptions.Length; i++)
+                {
+                    if (arrowPos == i)
+                    {
+                        Console.Write("> ");
+                    }
+                    else
+                    {
+                        Console.Write("  ");
+                    }
+                    Console.WriteLine(settingsOptions[i]);
+                }
+
+                keyPressed = Console.ReadKey(); //Getting up or down arrow inputs to move the arrow pointer
+                Console.Clear();
+                if (keyPressed.Key == ConsoleKey.UpArrow)
+                {
+                    arrowPos--;
+                }
+                else if (keyPressed.Key == ConsoleKey.DownArrow)
+                {
+                    arrowPos++;
+                }
+                else if (keyPressed.Key == ConsoleKey.Enter)
+                {
+                    settingsLoop = false;
+                }
+                arrowPos = Bouce(arrowPos, 0, settingsOptions.Length - 1);
+            } 
+            
+            if (arrowPos == 0)
+            {
+                Prefernces();
+            }
+            else if (arrowPos == 1)
+            {
+                ListContestants();
+            }
+            else if (arrowPos == 2)
+            {
+                PlayerStats();
+            }
+            else if (arrowPos == 3)
+            {
+                Menu();
+            }            
         }
 
-        static void InterestChange()
+        static void Prefernces()
         {
-
+            Settings();
         }
 
+        static void ListContestants()
+        {
+            Settings();
+        }
 
+        static void PlayerStats()
+        {
+            Settings();
+        }
+
+        static void Game()
+        {
+            Menu();
+        }
+
+        //^^^ Methods that relate to the game ^^^
+
+        //vvv Other methods vvv
+
+        static int Bouce(int input, int lower, int upper)
+        {            
+            if (input < lower)
+            {
+                input = upper;
+            }
+            else if (input > upper)
+            {
+                input = lower;
+            }
+
+            return input;
+        }
+
+        //^^^ Other methods ^^^
 
         static void Main()
         {
-
+            Menu();
         }
     }
 }
