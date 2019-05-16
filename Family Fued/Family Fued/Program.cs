@@ -151,21 +151,29 @@ namespace Family_Fued
 
         static void Prefernces()
         {
+            Console.WriteLine("Preferences");
+            Console.ReadLine();
             Settings();
         }
 
         static void ListContestants()
         {
+            Console.WriteLine("List contestants");
+            Console.ReadLine();
             Settings();
         }
 
         static void PlayerStats()
         {
+            Console.WriteLine("Player stats");
+            Console.ReadLine();
             Settings();
         }
 
         static void Game()
         {
+            Console.WriteLine("Game");
+            Console.ReadLine();
             Menu();
         }
 
