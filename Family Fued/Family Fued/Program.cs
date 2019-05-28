@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 /* ---Instructions---
  *
@@ -35,6 +36,16 @@ namespace Family_Fued
 {
     class Program
     {
+    
+        public struct Contestant
+        {
+            public string fName;
+            public string lName;
+            public string interest;
+        }
+
+        Contestant[] contestants = new Contestant[43];
+
         //vvv Methods that relate to the game vvv
 
         static void Menu()
@@ -77,7 +88,7 @@ namespace Family_Fued
                 {
                     menuLoop = false;
                 }
-                arrowPos = Bouce(arrowPos, 0, menuOptions.Length - 1);
+                arrowPos = NumLoop(arrowPos, 0, menuOptions.Length - 1);
             }
 
             if (arrowPos == 0)
@@ -128,7 +139,7 @@ namespace Family_Fued
                 {
                     settingsLoop = false;
                 }
-                arrowPos = Bouce(arrowPos, 0, settingsOptions.Length - 1);
+                arrowPos = NumLoop(arrowPos, 0, settingsOptions.Length - 1);
             } 
             
             if (arrowPos == 0)
@@ -158,13 +169,17 @@ namespace Family_Fued
 
         static void ListContestants()
         {
-            Console.WriteLine("List contestants");
+            
+            StreamReader reader = new StreamReader(@"familyFeud.txt");
+
+
             Console.ReadLine();
             Settings();
         }
 
         static void PlayerStats()
         {
+            System.Diagnostics.Process.Start(@"familyFeud.txt");
             Console.WriteLine("Player stats");
             Console.ReadLine();
             Settings();
@@ -181,7 +196,7 @@ namespace Family_Fued
 
         //vvv Other methods vvv
 
-        static int Bouce(int input, int lower, int upper)
+        static int NumLoop(int input, int lower, int upper)
         {            
             if (input < lower)
             {
@@ -198,7 +213,7 @@ namespace Family_Fued
         //^^^ Other methods ^^^
 
         static void Main()
-        {
+        {        
             Menu();
         }
     }
