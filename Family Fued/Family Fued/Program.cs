@@ -174,6 +174,7 @@ namespace Family_Fued
             ConsoleKeyInfo keyPressed;            
 
             UpdateContestants(@"familyFeud.txt");
+            SortContestants();
             do
             {
                 Console.Clear();
@@ -213,7 +214,7 @@ namespace Family_Fued
 
                 Console.WriteLine("\nUse arrow keys to navigate | Press 'enter' to edit current selection | Press 'esc' to return");
 
-                keyPressed = Console.ReadKey(false);
+                keyPressed = Console.ReadKey();
                 if (keyPressed.Key == ConsoleKey.Escape)
                 {                   
                     loop = false;
@@ -234,6 +235,12 @@ namespace Family_Fued
                 {
                     selection++;
                 }
+                else if (keyPressed.Key == ConsoleKey.Enter)
+                {
+                    Console.WriteLine("What do you want to change the interest to?");
+                    contestants[selection].interest = Console.ReadLine();
+                    UpdateFile(@"familyFeud.txt");
+                }
                 selection = NumLoop(selection, 0, contestants.Length - 1);
 
             } while (loop == true);
@@ -241,19 +248,10 @@ namespace Family_Fued
             Settings();
         }
 
+
         static void PlayerStats()
         {
             Console.WriteLine("Player stats");
-
-            //TEMPORARY TESTING ---
-            UpdateContestants(@"familyFeud.txt");
-            for (int i = 0; i < contestants.Length; i++)
-            {
-                Console.WriteLine(contestants[i].fName + "|");
-                Console.WriteLine(contestants[i].lName + "|");
-            }
-            //TEMPORARY TESTING ---
-
             Console.ReadLine();
             Settings();
         }
@@ -263,6 +261,23 @@ namespace Family_Fued
             Console.WriteLine("Game");
             Console.ReadLine();
             Menu();
+        }
+
+        static void SortContestants()
+        {
+            Contestant temp;
+            for (int i = 0; i < contestants.Length - 1; i++)
+            {
+                for (int pos = 0; pos < contestants.Length - 1; pos++)
+                {
+                    if (contestants[pos].lName.CompareTo(contestants[pos+1].lName) > 0)
+                    {
+                        temp = contestants[pos];
+                        contestants[pos] = contestants[pos + 1];
+                        contestants[pos + 1] = temp;
+                    }
+                }
+            }
         }
 
         //^^^ Methods that relate to the game ^^^
@@ -285,7 +300,7 @@ namespace Family_Fued
 
         static void UpdateContestants(string filePath)
         {
-            StreamReader reader = new StreamReader(@"familyFeud.txt");
+            StreamReader reader = new StreamReader(filePath);
             for (int i = 0; i < contestants.Length; i++)
             {
                 contestants[i].fName = reader.ReadLine();
@@ -293,6 +308,18 @@ namespace Family_Fued
                 contestants[i].interest = reader.ReadLine();
             }
             reader.Close();
+        }
+
+        static void UpdateFile(string filePath)
+        {
+            StreamWriter writer = new StreamWriter(filePath);
+            for (int i = 0; i < contestants.Length; i++)
+            {
+                writer.WriteLine(contestants[i].fName);
+                writer.WriteLine(contestants[i].lName);
+                writer.WriteLine(contestants[i].interest);
+            }
+            writer.Close();            
         }
 
         //^^^ Other methods ^^^
