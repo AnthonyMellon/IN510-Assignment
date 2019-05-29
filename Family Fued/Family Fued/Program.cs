@@ -44,7 +44,7 @@ namespace Family_Fued
             public string interest;
         }
 
-        Contestant[] contestants = new Contestant[43];
+        public static Contestant[] contestants = new Contestant[43];
 
         //vvv Methods that relate to the game vvv
 
@@ -139,7 +139,7 @@ namespace Family_Fued
                 {
                     settingsLoop = false;
                 }
-                arrowPos = NumLoop(arrowPos, 0, settingsOptions.Length - 1);
+                arrowPos = NumLoop(arrowPos, 2, settingsOptions.Length - 1);
             } 
             
             if (arrowPos == 0)
@@ -171,8 +171,13 @@ namespace Family_Fued
         {
             
             StreamReader reader = new StreamReader(@"familyFeud.txt");
-
-
+            for (int i = 0; i < contestants.Length; i++)
+            {
+                contestants[i].fName = reader.ReadLine();
+                contestants[i].lName = reader.ReadLine();
+                contestants[i].interest = reader.ReadLine();
+            }
+            reader.Close();
             Console.ReadLine();
             Settings();
         }
