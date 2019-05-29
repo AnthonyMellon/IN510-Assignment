@@ -139,7 +139,7 @@ namespace Family_Fued
                 {
                     settingsLoop = false;
                 }
-                arrowPos = NumLoop(arrowPos, 2, settingsOptions.Length - 1);
+                arrowPos = NumLoop(arrowPos, 0, settingsOptions.Length - 1);
             } 
             
             if (arrowPos == 0)
@@ -169,23 +169,91 @@ namespace Family_Fued
 
         static void ListContestants()
         {
-            
-            StreamReader reader = new StreamReader(@"familyFeud.txt");
-            for (int i = 0; i < contestants.Length; i++)
+            int columns = 5, count = 0, selection = 0;
+            bool loop = true;
+            ConsoleKeyInfo keyPressed;            
+
+            UpdateContestants(@"familyFeud.txt");
+            do
             {
-                contestants[i].fName = reader.ReadLine();
-                contestants[i].lName = reader.ReadLine();
-                contestants[i].interest = reader.ReadLine();
-            }
-            reader.Close();
-            Console.ReadLine();
+                Console.Clear();
+                Console.WriteLine("CONTESTANT LIST: \n");
+
+                count = 0;
+                while (count < contestants.Length)
+                {
+                    for (int i = 0; i < columns; i++)
+                    {
+                        if (count + i == selection)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                        }
+                        if (count + i < contestants.Length)
+                        {
+                            Console.Write((contestants[i + count].fName + " " + contestants[i + count].lName).PadRight(30));
+                        }
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                    }                    
+                    Console.WriteLine();
+                    for (int i = 0; i < columns; i++)
+                    {
+                        if (count + i == selection)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                        }
+                        if (count + i < contestants.Length)
+                        {
+                            Console.Write(contestants[i + count].interest.PadRight(30));
+                        }
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                    }
+                    count += columns;
+                    Console.WriteLine("\n");
+                }
+
+                Console.WriteLine("\nUse arrow keys to navigate | Press 'enter' to edit current selection | Press 'esc' to return");
+
+                keyPressed = Console.ReadKey(false);
+                if (keyPressed.Key == ConsoleKey.Escape)
+                {                   
+                    loop = false;
+                }
+                else if (keyPressed.Key == ConsoleKey.UpArrow)
+                {
+                    selection -= columns;
+                }
+                else if (keyPressed.Key == ConsoleKey.DownArrow)
+                {
+                    selection += columns;
+                }
+                else if (keyPressed.Key == ConsoleKey.LeftArrow)
+                {
+                    selection--;
+                }
+                else if (keyPressed.Key == ConsoleKey.RightArrow)
+                {
+                    selection++;
+                }
+                selection = NumLoop(selection, 0, contestants.Length - 1);
+
+            } while (loop == true);
+  
             Settings();
         }
 
         static void PlayerStats()
         {
-            System.Diagnostics.Process.Start(@"familyFeud.txt");
             Console.WriteLine("Player stats");
+
+            //TEMPORARY TESTING ---
+            UpdateContestants(@"familyFeud.txt");
+            for (int i = 0; i < contestants.Length; i++)
+            {
+                Console.WriteLine(contestants[i].fName + "|");
+                Console.WriteLine(contestants[i].lName + "|");
+            }
+            //TEMPORARY TESTING ---
+
             Console.ReadLine();
             Settings();
         }
@@ -215,10 +283,23 @@ namespace Family_Fued
             return input;
         }
 
+        static void UpdateContestants(string filePath)
+        {
+            StreamReader reader = new StreamReader(@"familyFeud.txt");
+            for (int i = 0; i < contestants.Length; i++)
+            {
+                contestants[i].fName = reader.ReadLine();
+                contestants[i].lName = reader.ReadLine();
+                contestants[i].interest = reader.ReadLine();
+            }
+            reader.Close();
+        }
+
         //^^^ Other methods ^^^
 
         static void Main()
-        {        
+        {
+            Console.CursorVisible = false;
             Menu();
         }
     }
