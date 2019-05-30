@@ -237,7 +237,7 @@ namespace Family_Fued
                 }
                 else if (keyPressed.Key == ConsoleKey.Enter)
                 {
-                    Console.WriteLine("What do you want to change the interest to?");
+                    Console.WriteLine($"What do you want to change {contestants[selection].fName}s interest to?");
                     contestants[selection].interest = Console.ReadLine();
                     UpdateFile(@"familyFeud.txt");
                 }
@@ -256,12 +256,18 @@ namespace Family_Fued
             Settings();
         }
 
+        static void getPlayers()
+        {
+            Contestant[] finalists = new Contestant[9];
+        }
         static void Game()
         {
-            Console.WriteLine("Game");
+            Console.WriteLine("You are now playing Family Feud");
             Console.ReadLine();
             Menu();
         }
+
+
 
         static void SortContestants()
         {
