@@ -171,7 +171,7 @@ namespace Family_Fued
         {
             
             StreamReader reader = new StreamReader(@"familyFeud.txt");
-            for (int i = 0; i < contestants.Length; i++)
+            for (int i = 1; i < contestants.Length; i++)
             {
                 contestants[i].fName = reader.ReadLine();
                 contestants[i].lName = reader.ReadLine();
