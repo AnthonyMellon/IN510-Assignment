@@ -169,7 +169,7 @@ namespace Family_Fued
 
         static void ListContestants()
         {
-            int columns = 5, count = 0, selection = 0;
+            int columns = 4, count = 0, selection = 0;
             bool loop = true;
             ConsoleKeyInfo keyPressed;            
 
@@ -258,6 +258,9 @@ namespace Family_Fued
 
         static void getPlayers()
         {
+            Random rand = new Random();
+            bool loop;
+            int x;
             Contestant[] finalists = new Contestant[9];
         }
         static void Game()
