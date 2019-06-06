@@ -259,13 +259,35 @@ namespace Family_Fued
         static void getPlayers()
         {
             Random rand = new Random();
-            bool loop;
-            int x;
-            Contestant[] finalists = new Contestant[9];
+            bool orignalContestant = true;
+            int newContestant;
+            int[] finalists = new int[9];
+
+            Console.WriteLine("The finalists are:");
+
+            for (int i = 0; i < finalists.Length; i++)
+            {                                
+                do
+                {
+                    orignalContestant = true;
+                    newContestant = rand.Next(contestants.Length);
+
+                    for (int j = 0; j < finalists.Length; j++)
+                    {
+                        if (newContestant == finalists[j])
+                        {
+                            orignalContestant = false;
+                        }
+                    }
+                } while (orignalContestant == true);
+                finalists[i] = newContestant;
+                Console.WriteLine(contestants[finalists[i]].fName);
+            }
         }
         static void Game()
         {
             Console.WriteLine("You are now playing Family Feud");
+            getPlayers();
             Console.ReadLine();
             Menu();
         }
