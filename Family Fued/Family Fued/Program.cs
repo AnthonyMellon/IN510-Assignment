@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 
 /* ---Instructions---
@@ -37,6 +38,8 @@ namespace Family_Fued
     class Program
     {
     
+        //vvv Structures vvv 
+
         public struct Contestant
         {
             public string fName;
@@ -44,7 +47,13 @@ namespace Family_Fued
             public string interest;
         }
 
+        //^^^ Structures
+
+        // vvv Other Class-wide Variables vvv
+
         public static Contestant[] contestants = new Contestant[43];
+
+        // ^^^ Other Class-wide Variables ^^^
 
         //vvv Methods that relate to the game vvv
 
@@ -99,7 +108,8 @@ namespace Family_Fued
             {
                 Settings();
             }
-        }
+
+        } //Menu End
 
         static void Settings()
         {
@@ -157,15 +167,17 @@ namespace Family_Fued
             else if (arrowPos == 3)
             {
                 Menu();
-            }            
-        }
+            }         
+            
+        } //Settings End
 
         static void Prefernces()
         {
             Console.WriteLine("Preferences");
             Console.ReadLine();
             Settings();
-        }
+
+        } //Preferences End
 
         static void ListContestants()
         {
@@ -181,9 +193,10 @@ namespace Family_Fued
                 Console.WriteLine("CONTESTANT LIST: \n");
 
                 count = 0;
-                while (count < contestants.Length)
+                while (count < contestants.Length) //Writing Each Contestant
                 {
-                    for (int i = 0; i < columns; i++)
+                    
+                    for (int i = 0; i < columns; i++) //Writing the contestants names on one line
                     {
                         if (count + i == selection)
                         {
@@ -194,9 +207,10 @@ namespace Family_Fued
                             Console.Write((contestants[i + count].fName + " " + contestants[i + count].lName).PadRight(30));
                         }
                         Console.ForegroundColor = ConsoleColor.Gray;
-                    }                    
+                    }                     
                     Console.WriteLine();
-                    for (int i = 0; i < columns; i++)
+                    
+                    for (int i = 0; i < columns; i++) //Writing the contestants interests on the next line
                     {
                         if (count + i == selection)
                         {
@@ -208,12 +222,14 @@ namespace Family_Fued
                         }
                         Console.ForegroundColor = ConsoleColor.Gray;
                     }
+
                     count += columns;
                     Console.WriteLine("\n");
                 }
 
                 Console.WriteLine("\nUse arrow keys to navigate | Press 'enter' to edit current selection | Press 'esc' to return");
 
+                //Navigation and Controls
                 keyPressed = Console.ReadKey();
                 if (keyPressed.Key == ConsoleKey.Escape)
                 {                   
@@ -246,7 +262,8 @@ namespace Family_Fued
             } while (loop == true);
   
             Settings();
-        }
+
+        } //List Contestants End
 
 
         static void PlayerStats()
@@ -254,18 +271,22 @@ namespace Family_Fued
             Console.WriteLine("Player stats");
             Console.ReadLine();
             Settings();
-        }
 
-        static void getPlayers()
+        } //Player Stats End
+
+        static void GetPlayers()
         {
             Random rand = new Random();
             bool orignalContestant = true;
             int newContestant;
-            int[] finalists = new int[9];
+            int[] finalists = new int[10];
+            Contestant finalist;
 
-            Console.WriteLine("The finalists are:");
+            UpdateContestants(@"familyFeud.txt");
 
-            for (int i = 0; i < finalists.Length; i++)
+            Console.WriteLine("The finalists are: \n");
+
+            for (int i = 0; i < finalists.Length; i++) //Get 10 Finalists
             {                                
                 do
                 {
@@ -279,18 +300,29 @@ namespace Family_Fued
                             orignalContestant = false;
                         }
                     }
-                } while (orignalContestant == true);
+
+                } while (orignalContestant == false);
                 finalists[i] = newContestant;
-                Console.WriteLine(contestants[finalists[i]].fName);
+                Console.WriteLine($"{i + 1}: {contestants[finalists[i]].fName} {contestants[finalists[i]].lName} \n");
             }
-        }
+            Console.WriteLine("Press Any Key to Continue \n \n");
+            Console.ReadKey(true);
+            finalist = contestants[finalists[rand.Next(finalists.Length)]];
+            Console.WriteLine("Our Finalist Is...");
+            Thread.Sleep(100);
+            Console.WriteLine($"{finalist.fName} {finalist.lName}! \n");
+            Console.WriteLine("Press Any Key to Continue");
+            Console.ReadKey();
+
+        } //Get Players End
+
         static void Game()
         {
             Console.WriteLine("You are now playing Family Feud");
-            getPlayers();
-            Console.ReadLine();
+            GetPlayers();
             Menu();
-        }
+
+        } //Game End
 
 
 
@@ -309,7 +341,8 @@ namespace Family_Fued
                     }
                 }
             }
-        }
+
+        } //Sort Contestants End
 
         //^^^ Methods that relate to the game ^^^
 
@@ -327,7 +360,8 @@ namespace Family_Fued
             }
 
             return input;
-        }
+
+        } //Number Loop End
 
         static void UpdateContestants(string filePath)
         {
@@ -339,7 +373,8 @@ namespace Family_Fued
                 contestants[i].interest = reader.ReadLine();
             }
             reader.Close();
-        }
+
+        } //Update Contestants End
 
         static void UpdateFile(string filePath)
         {
@@ -350,8 +385,9 @@ namespace Family_Fued
                 writer.WriteLine(contestants[i].lName);
                 writer.WriteLine(contestants[i].interest);
             }
-            writer.Close();            
-        }
+            writer.Close();   
+            
+        } //Update File End
 
         //^^^ Other methods ^^^
 
@@ -359,6 +395,6 @@ namespace Family_Fued
         {
             Console.CursorVisible = false;
             Menu();
-        }
+        } //Main End
     }
 }
