@@ -169,7 +169,7 @@ namespace Family_Fued
 
         static void ListContestants()
         {
-            int columns = 4, count = 0, selection = 0;
+            int columns = 5, count = 0, selection = 0;
             bool loop = true;
             ConsoleKeyInfo keyPressed;            
 
@@ -258,6 +258,7 @@ namespace Family_Fued
 
         static void getPlayers()
         {
+            UpdateContestants(@"familyFeud.txt");
             Random rand = new Random();
             bool orignalContestant = true;
             int newContestant;
