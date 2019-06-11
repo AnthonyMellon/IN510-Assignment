@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 
 /* ---Instructions---
@@ -37,6 +38,8 @@ namespace Family_Fued
     class Program
     {
     
+        //vvv Structures vvv 
+
         public struct Contestant
         {
             public string fName;
@@ -44,7 +47,31 @@ namespace Family_Fued
             public string interest;
         }
 
+        public struct Answer
+        {
+            public string answer;
+            public int points;
+        }
+        public struct Question
+        {
+            public string question;
+            public Answer answer1;
+            public Answer answer2;
+            public Answer answer3;
+            public Answer answer4;
+            public Answer answer5;
+            public Answer answer6;            
+        }
+
+        //^^^ Structures
+
+        // vvv Other Class-wide Variables vvv
+
         public static Contestant[] contestants = new Contestant[43];
+
+        public static string contestantsList = "familyFeud.txt";
+
+        // ^^^ Other Class-wide Variables ^^^
 
         //vvv Methods that relate to the game vvv
 
@@ -99,7 +126,8 @@ namespace Family_Fued
             {
                 Settings();
             }
-        }
+
+        } //Menu End
 
         static void Settings()
         {
@@ -157,33 +185,38 @@ namespace Family_Fued
             else if (arrowPos == 3)
             {
                 Menu();
-            }            
-        }
+            }         
+            
+        } //Settings End
 
         static void Prefernces()
         {
             Console.WriteLine("Preferences");
             Console.ReadLine();
             Settings();
-        }
+
+        } //Preferences End
 
         static void ListContestants()
         {
-            int columns = 5, count = 0, selection = 0;
+            int columns = 5, count = 0, selection = 0;   
+            //StreamReader reader = new StreamReader(contestantsList);
             bool loop = true;
             ConsoleKeyInfo keyPressed;            
 
-            UpdateContestants(@"familyFeud.txt");
+            UpdateContestants(contestantsList);
             SortContestants();
             do
+
             {
                 Console.Clear();
                 Console.WriteLine("CONTESTANT LIST: \n");
 
                 count = 0;
-                while (count < contestants.Length)
+                while (count < contestants.Length) //Writing Each Contestant
                 {
-                    for (int i = 0; i < columns; i++)
+                    
+                    for (int i = 0; i < columns; i++) //Writing the contestants names on one line
                     {
                         if (count + i == selection)
                         {
@@ -194,9 +227,10 @@ namespace Family_Fued
                             Console.Write((contestants[i + count].fName + " " + contestants[i + count].lName).PadRight(30));
                         }
                         Console.ForegroundColor = ConsoleColor.Gray;
-                    }                    
+                    }                     
                     Console.WriteLine();
-                    for (int i = 0; i < columns; i++)
+                    
+                    for (int i = 0; i < columns; i++) //Writing the contestants interests on the next line
                     {
                         if (count + i == selection)
                         {
@@ -208,12 +242,14 @@ namespace Family_Fued
                         }
                         Console.ForegroundColor = ConsoleColor.Gray;
                     }
+
                     count += columns;
                     Console.WriteLine("\n");
                 }
 
                 Console.WriteLine("\nUse arrow keys to navigate | Press 'enter' to edit current selection | Press 'esc' to return");
 
+                //Navigation and Controls
                 keyPressed = Console.ReadKey();
                 if (keyPressed.Key == ConsoleKey.Escape)
                 {                   
@@ -239,14 +275,15 @@ namespace Family_Fued
                 {
                     Console.WriteLine($"What do you want to change {contestants[selection].fName}s interest to?");
                     contestants[selection].interest = Console.ReadLine();
-                    UpdateFile(@"familyFeud.txt");
+                    UpdateFile(contestantsList);
                 }
                 selection = NumLoop(selection, 0, contestants.Length - 1);
 
             } while (loop == true);
   
             Settings();
-        }
+
+        } //List Contestants End
 
 
         static void PlayerStats()
@@ -254,19 +291,22 @@ namespace Family_Fued
             Console.WriteLine("Player stats");
             Console.ReadLine();
             Settings();
-        }
 
-        static void getPlayers()
+        } //Player Stats End
+
+        static void GetPlayers()
         {
-            UpdateContestants(@"familyFeud.txt");
             Random rand = new Random();
             bool orignalContestant = true;
             int newContestant;
-            int[] finalists = new int[9];
+            int[] finalists = new int[10];
+            Contestant finalist;
 
-            Console.WriteLine("The finalists are:");
+            UpdateContestants(contestantsList);
 
-            for (int i = 0; i < finalists.Length; i++)
+            Console.WriteLine("The finalists are: \n");
+
+            for (int i = 0; i < finalists.Length; i++) //Get 10 Finalists
             {                                
                 do
                 {
@@ -280,18 +320,98 @@ namespace Family_Fued
                             orignalContestant = false;
                         }
                     }
-                } while (orignalContestant == true);
+
+                } while (orignalContestant == false);
                 finalists[i] = newContestant;
-                Console.WriteLine(contestants[finalists[i]].fName);
+                Console.WriteLine($"{i + 1}: {contestants[finalists[i]].fName} {contestants[finalists[i]].lName} \n");
             }
-        }
+            Console.WriteLine("Press Any Key to Continue \n \n");
+            Console.ReadKey(true);
+            finalist = contestants[finalists[rand.Next(finalists.Length)]];
+            Console.Write("Our Finalist Is");
+            for (int i = 0; i < 3; i++)
+            {
+                Console.Write(".");
+                Thread.Sleep(250);
+            }
+            Console.WriteLine();
+            Console.WriteLine($"{finalist.fName} {finalist.lName}! \n");
+            Console.WriteLine("Press Any Key to Continue");
+            Console.ReadKey();
+
+        } //Get Players End
+
         static void Game()
         {
+            int[] QuestionsNums = new int[2];
+            Question[] Questions = new Question[QuestionsNums.Length];
+            Random rand = new Random();
+            bool originalQuestion;
+            for (int i = 0; i < QuestionsNums.Length; i++) //Set Question Numbers
+            {
+                int newQuestion;
+                do
+                {
+                    originalQuestion = true;                    
+                    newQuestion = rand.Next(1, 4);
+                    for (int j = 0; j < QuestionsNums.Length; j++)
+                    {
+                        if (newQuestion == QuestionsNums[j])
+                        {
+                            originalQuestion = false;
+                        }
+                    }
+
+                } while (originalQuestion == false);
+                QuestionsNums[i] = newQuestion;
+            }
             Console.WriteLine("You are now playing Family Feud");
-            getPlayers();
+            GetPlayers();
+            
+            for (int i = 0; i < QuestionsNums.Length; i++)
+            {
+                string rawQuestion = GetLine(QuestionsNums[i]);
+                Questions[i].question = rawQuestion.Split(':')[0];
+                Console.WriteLine(Questions[i].question);
+
+                Questions[i].answer1.answer = rawQuestion.Split(':')[1].Split(';')[0].Split('.')[0];
+                Questions[i].answer1.points = Convert.ToInt16(rawQuestion.Split(':')[1].Split(';')[0].Split('.')[1]);
+                Console.WriteLine(Questions[i].answer1.answer);
+                Console.WriteLine(Questions[i].answer1.points);
+
+                Questions[i].answer1.answer = rawQuestion.Split(':')[1].Split(';')[1].Split('.')[0];
+                Questions[i].answer1.points = Convert.ToInt16(rawQuestion.Split(':')[1].Split(';')[1].Split('.')[1]);
+                Console.WriteLine(Questions[i].answer1.answer);
+                Console.WriteLine(Questions[i].answer1.points);
+
+                Questions[i].answer1.answer = rawQuestion.Split(':')[1].Split(';')[2].Split('.')[0];
+                Questions[i].answer1.points = Convert.ToInt16(rawQuestion.Split(':')[1].Split(';')[2].Split('.')[1]);
+                Console.WriteLine(Questions[i].answer1.answer);
+                Console.WriteLine(Questions[i].answer1.points);
+
+                Questions[i].answer1.answer = rawQuestion.Split(':')[1].Split(';')[3].Split('.')[0];
+                Questions[i].answer1.points = Convert.ToInt16(rawQuestion.Split(':')[1].Split(';')[3].Split('.')[1]);
+                Console.WriteLine(Questions[i].answer1.answer);
+                Console.WriteLine(Questions[i].answer1.points);
+
+                Questions[i].answer1.answer = rawQuestion.Split(':')[1].Split(';')[4].Split('.')[0];
+                Questions[i].answer1.points = Convert.ToInt16(rawQuestion.Split(':')[1].Split(';')[4].Split('.')[1]);
+                Console.WriteLine(Questions[i].answer1.answer);
+                Console.WriteLine(Questions[i].answer1.points);
+
+                Questions[i].answer1.answer = rawQuestion.Split(':')[1].Split(';')[5].Split('.')[0];
+                Questions[i].answer1.points = Convert.ToInt16(rawQuestion.Split(':')[1].Split(';')[5].Split('.')[1]);
+                Console.WriteLine(Questions[i].answer1.answer);
+                Console.WriteLine(Questions[i].answer1.points);
+
+                Console.WriteLine();
+            }
+
+
             Console.ReadLine();
             Menu();
-        }
+
+        } //Game End
 
 
 
@@ -310,7 +430,8 @@ namespace Family_Fued
                     }
                 }
             }
-        }
+
+        } //Sort Contestants End
 
         //^^^ Methods that relate to the game ^^^
 
@@ -328,7 +449,8 @@ namespace Family_Fued
             }
 
             return input;
-        }
+
+        } //Number Loop End
 
         static void UpdateContestants(string filePath)
         {
@@ -340,7 +462,8 @@ namespace Family_Fued
                 contestants[i].interest = reader.ReadLine();
             }
             reader.Close();
-        }
+
+        } //Update Contestants End
 
         static void UpdateFile(string filePath)
         {
@@ -351,8 +474,22 @@ namespace Family_Fued
                 writer.WriteLine(contestants[i].lName);
                 writer.WriteLine(contestants[i].interest);
             }
-            writer.Close();            
+            writer.Close();   
+            
+        } //Update File End
+
+        static string GetLine(int lineNum)
+        {
+            StreamReader reader = new StreamReader(@"H:\My Documents\IN510 Programming 1\Family Fued\IN510-Assignment\Questions.txt");
+            string line = "";
+            for (int i = 0; i < lineNum; i++)
+            {
+                line = reader.ReadLine();
+            }
+            reader.Close();
+            return line;
         }
+
 
         //^^^ Other methods ^^^
 
@@ -360,6 +497,6 @@ namespace Family_Fued
         {
             Console.CursorVisible = false;
             Menu();
-        }
+        } //Main End
     }
 }
